@@ -28,6 +28,7 @@ module "ubuntu-2604" {
   cpu_cores = 2
   mem_dedicated = 2048
   mem_floating = 2048
-  vm_bridge = "vmbr0.20"
+  vm_bridge = "vmbr0"
+  vlan_id = 20
   vm_disk_size = 20
 }

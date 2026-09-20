@@ -62,6 +62,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
 
   network_device {
     bridge = var.vm_bridge
+    vlan_id = var.vlan_id
   }
 
   operating_system {

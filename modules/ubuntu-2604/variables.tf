@@ -28,6 +28,11 @@ variable vm_bridge {
   type        = string
 }
 
+variable vlan_id {
+  description = "VLAN ID of bridge"
+  type        = number
+}
+
 variable vm_disk_size {
   description = "Size of the VM disk"
   type        = number
