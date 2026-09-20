@@ -1,0 +1,25 @@
+# Local micro-state and transient files
+.terraform/
+
+# Prevent saving local state/backup files (use remote state instead)
+*.tfstate
+*.tfstate.*
+
+# Exclude crash logs and CLI configuration
+crash.log
+crash.*.log
+.terraformrc
+terraform.rc
+
+# Exclude sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Exclude override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Exclude CLI plan files (can contain secrets)
+*.tfplan

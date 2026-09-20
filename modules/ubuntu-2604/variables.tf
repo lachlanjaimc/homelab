@@ -23,12 +23,12 @@ variable mem_floating {
   type        = number
 }
 
-variable vm_ip {
-  description = "IPv4 address of the VM"
-  type        = string
-}
-
 variable vm_bridge {
   description = "The network bridge for the VM"
   type        = string
+}
+
+variable vm_disk_size {
+  description = "Size of the VM disk"
+  type        = number
 }

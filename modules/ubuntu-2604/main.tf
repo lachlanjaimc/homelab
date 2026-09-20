@@ -1,3 +1,21 @@
+terraform {
+  required_providers {
+    proxmox = {    
+      source = "bpg/proxmox"
+      version = "~> 0.112.0"
+    }
+  }
+}
+
+provider "proxmox" {
+  endpoint = "https://pve:8006"
+  insecure = true
+
+  ssh {
+    agent = true
+  }
+}
+
 resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
   name = var.vm_name
   description = "Managed by Terraform"
@@ -5,6 +23,9 @@ resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
   
   node_name = "pve"
   vm_id     = var.vm_id
+
+  timeout_create = 1800
+  timeout_clone  = 1800
 
   agent {
     enabled = true
@@ -24,13 +45,16 @@ resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
     datastore_id = "disks"
     import_from  = proxmox_virtual_environment_download_file.ubuntu-2604.id
     interface    = "scsi0"
+    size         = var.vm_disk_size
   }
 
   initialization {
     datastore_id = "disks"
 
     ip_config {
-      address = var.vm_ip
+      ipv4 {
+        address = "dhcp"
+      }
     }
 
     user_data_file_id = proxmox_virtual_environment_file.cloud_config.id
@@ -49,20 +73,14 @@ resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
   }
 
   serial_device {}
-
-  virtiofs {
-    mapping   = "data_share"
-    cache     = "always"
-    direct_io = true
-  }
 }
 
 resource "proxmox_virtual_environment_download_file" "ubuntu-2604" {
   content_type = "import"
   datastore_id = "local"
   node_name = "pve"
-  url = "https://cloud-images.ubuntu.com/releases/releases/resolute/release/ubuntu-26.04-server-cloudimg-amd64.img"
-  file_name = "ubuntu-26.04-server-cloudimg-amd64.img"
+  url = "https://cloud-images.ubuntu.com/releases/resolute/release/ubuntu-26.04-server-cloudimg-amd64.img"
+  file_name = "ubuntu-26.04-server-cloudimg-amd64.qcow2"
 }
 
 resource "random_password" "ubuntu-2604_password" {
