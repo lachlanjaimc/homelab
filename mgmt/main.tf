@@ -8,6 +8,7 @@ terraform {
 }
 
 provider "proxmox" {
+  endpoint = "https://pve:8006"
   insecure = true
 }
 
