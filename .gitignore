@@ -23,3 +23,6 @@ override.tf.json
 
 # Exclude CLI plan files (can contain secrets)
 *.tfplan
+
+# Exclude Ansible Inventory files
+inventory.yml
