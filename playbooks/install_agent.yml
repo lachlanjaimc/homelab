@@ -1,0 +1,23 @@
+- name: Install Jenkins Agent on a Node
+  hosts: jenkins-node
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Download Jenkins agent binary
+      ansible.builtin.get_url:
+        url: http://jenkins-controller:8080/jnlpJars/agent.jar
+        dest: /home/ubuntu/agent.jar
+
+    - name: Update repos and install dependencies
+      ansible.builtin.apt:
+        name:
+          - openjdk-21-jre
+        update_cache: yes
+
+    - name: Run binary with secret
+      ansible.builtin.shell: nohup java -jar agent.jar -url http://jenkins-controller:8080/ -secret "{{ jenkins_secret }}" -name "jenkins-controller" -webSocket -workDir "/var/jenkins"
+      args:
+        chdir: /home/ubuntu
+      async: 10
+      poll: 0

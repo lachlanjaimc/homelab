@@ -26,19 +26,19 @@ provider "proxmox" {
   }
 }
 
-module "jenkins-controller" {
+module "jenkins-node" {
   source = "../modules/ubuntu-2604"
 
   providers = {
     proxmox = proxmox
   }
 
-  vm_name = "jenkins-controller"
-  vm_id   = 200
+  vm_name = "jenkins-node"
+  vm_id   = 300
   cpu_cores = 2
   mem_dedicated = 2048
   mem_floating = 2048
   vm_bridge = "vmbr0"
-  vlan_id = 20
+  vlan_id = 30
   vm_disk_size = 20
 }

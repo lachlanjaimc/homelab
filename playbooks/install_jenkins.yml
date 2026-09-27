@@ -13,11 +13,16 @@
         repo: "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
         state: present
 
-    - name: Update repos and install Jenkins with dependencies
+    - name: Update repos and install dependencies
       ansible.builtin.apt:
         name: 
           - fontconfig 
           - openjdk-21-jre
+        update_cache: yes
+
+    - name: Install Jenkins
+      ansible.builtin.apt:
+        name: 
           - jenkins
         update_cache: yes
 

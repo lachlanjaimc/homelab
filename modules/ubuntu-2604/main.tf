@@ -7,15 +7,6 @@ terraform {
   }
 }
 
-provider "proxmox" {
-  endpoint = "https://pve:8006"
-  insecure = true
-
-  ssh {
-    agent = true
-  }
-}
-
 resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
   name = var.vm_name
   description = "Managed by Terraform"
@@ -43,7 +34,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
 
   disk {
     datastore_id = "disks"
-    import_from  = proxmox_virtual_environment_download_file.ubuntu-2604.id
+    import_from  = proxmox_download_file.ubuntu-2604.id
     interface    = "scsi0"
     size         = var.vm_disk_size
   }
@@ -76,12 +67,14 @@ resource "proxmox_virtual_environment_vm" "ubuntu-2604" {
   serial_device {}
 }
 
-resource "proxmox_virtual_environment_download_file" "ubuntu-2604" {
+resource "proxmox_download_file" "ubuntu-2604" {
   content_type = "import"
   datastore_id = "local"
   node_name = "pve"
   url = "https://cloud-images.ubuntu.com/releases/resolute/release/ubuntu-26.04-server-cloudimg-amd64.img"
   file_name = "ubuntu-26.04-server-cloudimg-amd64.qcow2"
+  overwrite = true
+  overwrite_unmanaged = true
 }
 
 resource "random_password" "ubuntu-2604_password" {
@@ -123,6 +116,6 @@ resource "proxmox_virtual_environment_file" "cloud_config" {
       - echo "done" > /tmp/cloud-config.done
     EOF
 
-    file_name = "user-data-cloud-config.yaml"
+    file_name = "user-data-${var.vm_name}.yaml"
   }
 }
